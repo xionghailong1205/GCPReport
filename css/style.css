@@ -1,0 +1,147 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: url("../img/good_clinical_practice_img.jpg") no-repeat center center fixed;
+  background-size: cover;
+}
+
+.wrapper {
+  margin: 3% auto;
+  width: 90%;
+  font-family: sans-serif;
+  color: #fff;
+  font-size: 13px;
+  line-height: 24px;
+  max-width: 90%;
+  min-width: 90%;
+  overflow: hidden;
+}
+
+.tabs {
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
+
+.tabs li {
+  list-style: none;
+  float: left;
+  width: 20%;
+}
+
+.tabs a {
+  display: block;
+  text-align: center;
+  text-decoration: none;
+  position: relative;
+  text-transform: uppercase;
+  color: #81b8f3;
+  height: 30px;
+  line-height: 40px;
+  background: linear-gradient(165deg, transparent 29%, #fff 30%);
+  opacity: 0.8;
+}
+
+.tabs a:hover,
+.tabs a.active {
+  background: linear-gradient(165deg, transparent 29%, #81b8f3 30%);
+  color: #fff;
+}
+
+.tabs a:before {
+  content: "";
+  position: absolute;
+  z-index: 11;
+  left: 100%;
+  top: -100%;
+  height: 70px;
+  line-height: 90px;
+  width: 0;
+  border-bottom: 70px solid rgba(0, 0, 0, 0.1);
+  border-right: 7px solid transparent;
+}
+
+.tabs a.active:before {
+  content: "";
+  position: absolute;
+  z-index: 11;
+  left: 100%;
+  top: -100%;
+  height: 70px;
+  line-height: 90px;
+  width: 0;
+  border-bottom: 70px solid rgba(0, 0, 0, 0.2);
+  border-right: 20px solid transparent;
+}
+
+.tabgroup {
+  box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.1);
+  background-color: rgba(129, 184, 243, 0.8);
+}
+
+.tabgroup>div {
+  padding: 30px;
+  color: #fff;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+}
+
+.gcp_table>div:nth-child(1) {
+  border-right: 1px solid #fff;
+  margin-right: 12px !important;
+}
+
+#gcp_datas input.wl {
+  border-top: 0px;
+  border-left: 0px;
+  border-right: 0px;
+  box-shadow: none;
+  border-color: #ffffff;
+  cursor: text;
+  padding-bottom: 0px;
+  border-radius: 0;
+  position: relative;
+  top: 2px;
+}
+
+input[type="text"] {
+  background-color: rgba(129, 184, 243, 0.05) !important;
+  color: #fff !important;
+  font-family: inherit !important;
+  font-size: inherit !important;
+}
+
+input:focus {
+  outline: none;
+}
+
+#gcp_datas {
+  position: relative;
+}
+
+.clearfix:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+[class*="col-sm-"] {
+  padding: 0 !important;
+}
+
+.position-start-2 {
+  position: relative;
+  left: -2%;
+}
+
+.position-start-10 {
+  position: relative;
+  left: -10%;
+}
+
+.position-top-8 {
+  position: relative;
+  top: -8%;
+}

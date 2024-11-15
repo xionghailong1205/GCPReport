@@ -29,7 +29,7 @@ body {
 .tabs li {
   list-style: none;
   float: left;
-  width: 20%;
+  flex: 1;
 }
 
 .tabs a {
@@ -144,4 +144,44 @@ input:focus {
 .position-top-8 {
   position: relative;
   top: -8%;
+}
+
+.gcb_examination_table {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* 11.14 新增样式 */
+.examination_table_row {
+  display: flex;
+  gap: 10px;
+  padding-right: 20px;
+  align-items: center;
+}
+
+.examination_table_row div:nth-child(1) {
+  flex: 1.2;
+}
+
+.examination_table_row div:nth-child(2) {
+  flex: 1;
+}
+
+.form-control-custom {
+  border: 1px solid #ffffff;
+  top: 0px;
+  padding: 0px;
+  border-top: 0px;
+  border-left: 0px;
+  border-right: 0px;
+  box-shadow: none;
+  border-color: #ffffff;
+  cursor: text;
+  padding: 0px;
+  border-radius: 0;
+  display: block;
+  width: 100%;
+  font-weight: 400;
+  line-height: 1;
 }

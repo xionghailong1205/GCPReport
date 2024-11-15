@@ -185,3 +185,36 @@ input:focus {
   font-weight: 400;
   line-height: 1;
 }
+
+.empty_gcb_evaluation {
+  border: 2px dotted white;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 18px;
+}
+
+.do_evaluation_button {
+  /* position: absolute; */
+  font-size: 14px;
+  /* bottom: 10px; */
+  /* right: 20px; */
+  border: none;
+  padding: 5px 13px;
+  background-color: #31a4ebe3;
+  color: white;
+  border-radius: 5px;
+}
+
+.do_evaluation_button:hover {
+  background-color: #2296de;
+}
+
+.test {
+  gap: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}

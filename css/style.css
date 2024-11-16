@@ -211,7 +211,7 @@ input:focus {
   background-color: #2296de;
 }
 
-.test {
+.create_page_container {
   gap: 10px;
   display: flex;
   flex-direction: column;

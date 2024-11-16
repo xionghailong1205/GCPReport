@@ -31,7 +31,9 @@
                     <label for="research_Unit_Code">研究单位编号</label>
                   </div>
                   <div>
-                    <input type="text" class="form-control-custom">
+                    <input v-if="selectedGcpData.examinationData.researchUnitCode" type="text" readonly
+                      class="form-control-plaintext" id="ptdeid" :value="selectedGcpData.examinationData.ptdtUnitId" />
+                    <input type="text" class="form-control-custom" v-else>
                   </div>
                 </div>
                 <div class="examination_table_row">
@@ -39,7 +41,8 @@
                     <label for="ptdeid">受试者编号</label>
                   </div>
                   <div>
-                    <input type="text" readonly class="form-control-plaintext" id="ptdeid" value="xxxxxxxxxxxxxx">
+                    <input type="text" readonly class="form-control-plaintext" id="ptdeid"
+                      :value="selectedGcpData.examinationData.ptdeid">
                   </div>
                 </div>
                 <div class="examination_table_row">
@@ -47,7 +50,8 @@
                     <label for="ptdeid">访视名称</label>
                   </div>
                   <div>
-                    <input type="text" readonly class="form-control-plaintext" id="ptdeid" value="Screening">
+                    <input type="text" readonly class="form-control-plaintext" id="ptdeid"
+                      :value="selectedGcpData.examinationData.ptdtTabName">
                   </div>
                 </div>
                 <div class="examination_table_row">
@@ -55,7 +59,8 @@
                     <label for="ptdeid">检查日期</label>
                   </div>
                   <div>
-                    <input type="text" readonly class="form-control-plaintext" id="ptdt_sqdept" value="2024-11-08">
+                    <input type="text" readonly class="form-control-plaintext" id="ptdt_sqdept"
+                      :value="selectedGcpData.examinationData.ptdtCheckDate">
                   </div>
                 </div>
                 <div class="examination_table_row">
@@ -63,7 +68,8 @@
                     <label for="ptdt_weight">体重 (kg)</label>
                   </div>
                   <div>
-                    <input type="text" readonly class="form-control-plaintext" id="ptdt_weight" value="86">
+                    <input type="text" readonly class="form-control-plaintext" id="ptdt_weight"
+                      :value="selectedGcpData.examinationData.ptdtWeight">
                   </div>
                 </div>
                 <div class="examination_table_row">
@@ -71,7 +77,8 @@
                     <label for="ptdt_height">身高 (cm)</label>
                   </div>
                   <div>
-                    <input type="text" readonly class="form-control-plaintext" id="ptdt_height" value="180">
+                    <input type="text" readonly class="form-control-plaintext" id="ptdt_height"
+                      :value="selectedGcpData.examinationData.ptdtHeight">
                   </div>
                 </div>
                 <div class="examination_table_row">
@@ -79,7 +86,8 @@
                     <label for="ptdt_dosage_and_unit">净注入核素的活性</label>
                   </div>
                   <div>
-                    <input type="text" readonly class="form-control-plaintext" id="ptdt_dosage_and_unit" value="85 MBq">
+                    <input type="text" readonly class="form-control-plaintext" id="ptdt_dosage_and_unit"
+                      :value="selectedGcpData.examinationData.ptdtDosage">
                   </div>
                 </div>
                 <div class="examination_table_row">
@@ -87,7 +95,8 @@
                     <label for="ptdt_ReportDate2">FDG注射时间</label>
                   </div>
                   <div>
-                    <input type="text" readonly class="form-control-plaintext" id="ptdt_ReportDate2" value="18:24">
+                    <input type="text" readonly class="form-control-plaintext" id="ptdt_ReportDate2"
+                      :value="selectedGcpData.examinationData.ptdtInjectionTime">
                   </div>
                 </div>
                 <div class="examination_table_row">
@@ -95,7 +104,8 @@
                     <label for="ptdt_imageingTime">PET扫描开始时间</label>
                   </div>
                   <div>
-                    <input type="text" readonly class="form-control-plaintext" id="ptdt_imageingTime" value="22:16">
+                    <input type="text" readonly class="form-control-plaintext" id="ptdt_imageingTime"
+                      :value="selectedGcpData.examinationData.ptdtScanTime">
                   </div>
                 </div>
                 <div class="examination_table_row">
@@ -103,7 +113,8 @@
                     <label for="ptdt_bloodglucose">血糖水平 (mmol/L)</label>
                   </div>
                   <div>
-                    <input type="text" readonly class="form-control-plaintext" id="ptdt_bloodglucose" value="6.0">
+                    <input type="text" readonly class="form-control-plaintext" id="ptdt_bloodglucose"
+                      :value="selectedGcpData.examinationData.ptdtBloodglucose">
                   </div>
                 </div>
                 <div class="examination_table_row">
@@ -119,27 +130,314 @@
                     <label for="ptdt_djDoctor">记录人</label>
                   </div>
                   <div>
-                    <input type="text" readonly class="form-control-plaintext" id="ptdt_djDoctor" value="赵本三">
+                    <input type="text" readonly class="form-control-plaintext" id="ptdt_djDoctor"
+                      :value="selectedGcpData.examinationData.ptdtDjDoctor">
                   </div>
                 </div>
               </div>
               <div class="col-md">
-                <div class="empty_gcb_evaluation">
-                  <div class="test">
-                    <div>
-                      当前检查尚未进行评估
+                <!-- <empty_gcb_evaluation v-on:create-examination="doSomething" /> -->
+                <!-- 这是填写表 -->
+                <div>
+                  <div class="row row-cols-sm-auto">
+                    <div class="col-12">
+                      <label for="research_Unit_Code" class="col-form-label">纵隔血池 SUV=</label>
                     </div>
-                    <div>
-                      <button class="do_evaluation_button">
-                        进行评估
-                      </button>
+                    <div class="col-12 position-start-2" style="width: 10%">
+                      <input type="text" class="form-control wl"
+                        v-model="gcpDataList[activingTabIndex].evaluationData.mediastinumSuv">
+                    </div>
+                    <div class="col-12">
+                      <label for="ptdeid" class="col-form-label">肝脏 SUV=</label>
+                    </div>
+                    <div class="col-12 position-start-2" style="width: 10%">
+                      <input type="text" class="form-control wl"
+                        v-model="gcpDataList[activingTabIndex].evaluationData.liverSuv">
+                    </div>
+                  </div>
+                  <div class="row row-cols-sm-auto">
+                    <div class="col-12" style="width:35%">
+                      <label for="ptdeid" class="col-form-label">中存在 FDG 高摄取疾病的证据</label>
+                    </div>
+                    <div class="col-12">
+                      <div class="col-sm col-form-label">
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="radio" id="inlineCheckbox1" value="1"
+                            v-model="gcpDataList[activingTabIndex].evaluationData.evidence">
+                          <label class="form-check-label" for="inlineCheckbox1">Negative</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="radio" id="inlineCheckbox2" value="2"
+                            v-model="gcpDataList[activingTabIndex].evaluationData.evidence">
+                          <label class="form-check-label" for="inlineCheckbox2">Positive</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="radio" id="inlineCheckbox1" value="3"
+                            v-model="gcpDataList[activingTabIndex].evaluationData.evidence">
+                          <label class="form-check-label" for="inlineCheckbox1">Unknow</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="radio" id="inlineCheckbox2" value="4"
+                            v-model="gcpDataList[activingTabIndex].evaluationData.evidence">
+                          <label class="form-check-label" for="inlineCheckbox2">NE</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row row-cols-sm-auto">
+                    <div class="col-12" style="width:35%">
+                      <label for="ptdeid" class="col-form-label">代谢活性最强的病灶 （淋巴结和结外病灶）</label>
+                    </div>
+                    <div class="col-12">
+                      <div class="row row-cols-sm-auto">
+                        <div class="col-12">
+                          <label for="ptdeid" class="col-form-label">具体位置：</label>
+                        </div>
+                        <div class="col-12 position-start-2" style="width: 48%">
+                          <input type="text" class="end-0 form-control wl"
+                            v-model="gcpDataList[activingTabIndex].evaluationData.lesionLocation">
+                        </div>
+                        <div class="col-12">
+                          <label for="ptdeid" class="col-form-label">SUV=</label>
+                        </div>
+                        <div class="col-12 position-start-2" style="width: 15%">
+                          <input type="text" class="form-control wl"
+                            v-model="gcpDataList[activingTabIndex].evaluationData.lesionSuv">
+                        </div>
+                      </div>
+                      <div class="row row-cols-sm-auto">
+                        <div class="col-12">
+                          <label for="ptdeid" class="col-form-label">Lugano 5分量表（数字从1-5分）</label>
+                        </div>
+                        <div class="col-12 col-form-label position-start-2">
+                          <select class="form-select form-select-sm position-start-4 position-top-8"
+                            aria-label=".form-select-sm example"
+                            v-model="gcpDataList[activingTabIndex].evaluationData.iugano5ps">
+                            <option selected value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="row row-cols-sm-auto"
+                        v-if="gcpDataList[activingTabIndex].evaluationData.lesionCompare!==0">
+                        <div class="col-12">
+                          <div class="col-sm">
+                            <div class="col-sm col-form-label">
+                              <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" value="1"
+                                  v-model="gcpDataList[activingTabIndex].evaluationData.lesionCompare">
+                                <label class="form-check-label" for="inlineCheckbox1">与基线相比摄取减少</label>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row row-cols-sm-auto"
+                        v-if="gcpDataList[activingTabIndex].evaluationData.lesionCompare!==0">
+                        <div class="col-12">
+                          <div class="col-sm">
+                            <div class="col-sm col-form-label">
+                              <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" value="2"
+                                  v-model="gcpDataList[activingTabIndex].evaluationData.lesionCompare">
+                                <label class="form-check-label" for="inlineCheckbox1">与基线相比摄取无显著变化</label>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row row-cols-sm-auto"
+                        v-if="gcpDataList[activingTabIndex].evaluationData.lesionCompare!==0">
+                        <div class="col-12">
+                          <div class="col-sm">
+                            <div class="col-sm col-form-label">
+                              <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" value="3"
+                                  v-model="gcpDataList[activingTabIndex].evaluationData.lesionCompare">
+                                <label class="form-check-label" for="inlineCheckbox1">摄取量较目视测定的最低值增加</label>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row row-cols-sm-auto">
+                    <div class="col-12" style="width:35%">
+                      <label for="ptdeid" class="col-form-label">新的FDG显影病灶</label>
+                    </div>
+                    <div class="col-12">
+                      <div class="col-sm col-form-label">
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="radio" value="0"
+                            v-model="gcpDataList[activingTabIndex].evaluationData.isNewLesion">
+                          <label class="form-check-label" for="inlineCheckbox1">Yes</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="radio" value="1"
+                            v-model="gcpDataList[activingTabIndex].evaluationData.isNewLesion">
+                          <label class="form-check-label" for="inlineCheckbox2">No</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row row-cols-sm-auto">
+                    <div class="col-12" style="width:35%">
+                      <label for="ptdeid" class="col-form-label">FDG-avid 病灶是否与淋巴瘤一致，而不是其他原因，如感染或炎症？</label>
+                    </div>
+                    <div class="col-12">
+                      <div class="col-sm col-form-label">
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="radio" id="inlineCheckbox1" value="0"
+                            v-model="gcpDataList[activingTabIndex].evaluationData.isLesionConsistent">
+                          <label class="form-check-label" for="inlineCheckbox1">Yes</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="radio" id="inlineCheckbox2" value="1"
+                            v-model="gcpDataList[activingTabIndex].evaluationData.isLesionConsistent">
+                          <label class="form-check-label" for="inlineCheckbox2">No</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="radio" id="inlineCheckbox1" value="2"
+                            v-model="gcpDataList[activingTabIndex].evaluationData.isLesionConsistent">
+                          <label class="form-check-label" for="inlineCheckbox1">NA</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
+                          <label class="form-check-label" for="inlineCheckbox2">UNknow, Comment</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row row-cols-sm-auto">
+                    <div class="col-12" style="width:35%">
+                      <label for="ptdeid" class="col-form-label">缓解基于PET-CT扫描（采用Lugano 2014标准）</label>
+                    </div>
+                    <div class="col-12">
+                      <div class="col-sm col-form-label">
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="radio" id="basedPetScan1" value="1"
+                            v-model="gcpDataList[activingTabIndex].evaluationData.basedPetScan">
+                          <label class="form-check-label" for="basedPetScan1">CMR</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="radio" id="basedPetScan2" value="2"
+                            v-model="gcpDataList[activingTabIndex].evaluationData.basedPetScan">
+                          <label class="form-check-label" for="basedPetScan2">PMR</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="radio" id="basedPetScan3" value="3"
+                            v-model="gcpDataList[activingTabIndex].evaluationData.basedPetScan">
+                          <label class="form-check-label" for="basedPetScan3">SMD</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="radio" id="basedPetScan4" value="4"
+                            v-model="gcpDataList[activingTabIndex].evaluationData.basedPetScan">
+                          <label class="form-check-label" for=basedPetScan4"">PMD</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="radio" id="basedPetScan5" value="5"
+                            v-model="gcpDataList[activingTabIndex].evaluationData.basedPetScan">
+                          <label class="form-check-label" for="basedPetScan5">NE</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="radio" id="basedPetScan6" value="6"
+                            v-model="gcpDataList[activingTabIndex].evaluationData.basedPetScan">
+                          <label class="form-check-label" for="basedPetScan6">ND</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row row-cols-sm-auto">
+                    <div class="col-12" style="width:35%">
+                      <label for="ptdeid" class="col-form-label">根据LYRIC标准进行评估</label>
+                    </div>
+                    <div class="col-12">
+                      <div class="col-sm col-form-label">
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
+                          <label class="form-check-label" for="inlineCheckbox1">IR1</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
+                          <label class="form-check-label" for="inlineCheckbox2">IR2</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
+                          <label class="form-check-label" for="inlineCheckbox1">IR1 and IR3</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
+                          <label class="form-check-label" for="inlineCheckbox2">IR2 and IR3</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
+                          <label class="form-check-label" for="inlineCheckbox1">IR3</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
+                          <label class="form-check-label" for="inlineCheckbox2">PD</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
+                          <label class="form-check-label" for="inlineCheckbox1">NE</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
+                          <label class="form-check-label" for="inlineCheckbox2">NA</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row row-cols-sm-auto">
+                    <div class="col-12" style="width:35%">
+                      <label for="ptdeid" class="col-form-label">总体疗效评估</label>
+                    </div>
+                    <div class="col-12">
+                      <div class="col-sm col-form-label">
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
+                          <label class="form-check-label" for="inlineCheckbox1">IR1</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
+                          <label class="form-check-label" for="inlineCheckbox2">IR2</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
+                          <label class="form-check-label" for="inlineCheckbox1">IR1 and IR3</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
+                          <label class="form-check-label" for="inlineCheckbox2">IR2 and IR3</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
+                          <label class="form-check-label" for="inlineCheckbox1">IR3</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
+                          <label class="form-check-label" for="inlineCheckbox2">PD</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
+                          <label class="form-check-label" for="inlineCheckbox1">NE</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
+                          <label class="form-check-label" for="inlineCheckbox2">NA</label>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
+                <!-- 我们之后做这个呈现表格 -->
               </div>
             </div>
           </form>
-          <!-- <gcp_table></gcp_table> -->
         </div>
       </section>
     </div>

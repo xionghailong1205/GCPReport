@@ -17,7 +17,7 @@
           <a href="#tab" v-bind:class="{
             active: index === activingTabIndex
           }">
-            {{tab.ptdtTabName}}
+            {{`${tab.ptdtTabName} ${tab.hasEvaluated ? " " : "/ 尚未评估"}`}}
           </a>
         </li>
       </ul>
@@ -33,8 +33,9 @@
                   <div>
                     <input v-if="gcpDataList[activingTabIndex].examinationData.researchUnitCode" type="text" readonly
                       class="form-control-plaintext" id="ptdeid"
-                      :value="gcpDataList[activingTabIndex].examinationData.ptdtUnitId" />
-                    <input type="text" class="form-control-custom" v-else>
+                      :value="gcpDataList[activingTabIndex].examinationData.researchUnitCode" />
+                    <input type="text" class="form-control-custom"
+                      :value="gcpDataList[activingTabIndex].examinationData.researchUnitCode" v-else>
                   </div>
                 </div>
                 <div class="examination_table_row">
@@ -139,7 +140,7 @@
               <div class="col-md gcb_evaluation_table">
                 <!-- 这是填写表 -->
                 <div v-if="gcpDataList[activingTabIndex].evaluationData">
-                  <div v-if="gcpDataList[activingTabIndex].evaluationData.isEditing">
+                  <div v-if="!gcpDataList[activingTabIndex].evaluationData.isEditing">
                     <div>
                       <div class="row row-cols-sm-auto">
                         <div class="col-12">
@@ -806,7 +807,833 @@
                     </div>
                   </div>
                 </div>
-                <empty_gcb_evaluation v-on:create-examination="doSomething" v-else />
+                <div class="empty_gcb_evaluation" v-else>
+                  <div class="create_page_container">
+                    <div>
+                      当前检查尚未进行评估
+                    </div>
+                    <div>
+                      <button class="do_evaluation_button" v-on:click="createEvaluation">
+                        进行评估
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </section>
+    </div>
+
+    <div class="wrapper">
+      <ul class="tabs clearfix" data-tabgroup="first-tab-group">
+        <li v-for="(tab, index) in tagList" v-on:click="changeTabs2(index)">
+          <a href="#tab" v-bind:class="{
+            active: index === activingTabIndex2
+          }">
+            {{`${tab.ptdtTabName} ${tab.hasEvaluated ? " " : "/ 尚未评估"}`}}
+          </a>
+        </li>
+      </ul>
+      <section id="first-tab-group" class="tabgroup" v-if="tagList.length > 0">
+        <div id="tab1">
+          <form id="gcp_datas">
+            <div class="gcp_table row">
+              <div class="col-md-3 gcb_examination_table">
+                <div class="examination_table_row">
+                  <div>
+                    <label for="research_Unit_Code">研究单位编号</label>
+                  </div>
+                  <div>
+                    <input v-if="gcpDataList[activingTabIndex2].examinationData.researchUnitCode" type="text" readonly
+                      class="form-control-plaintext" id="ptdeid"
+                      :value="gcpDataList[activingTabIndex2].examinationData.researchUnitCode" />
+                    <input type="text" class="form-control-custom"
+                      :value="gcpDataList[activingTabIndex2].examinationData.researchUnitCode" v-else>
+                  </div>
+                </div>
+                <div class="examination_table_row">
+                  <div>
+                    <label for="ptdeid">受试者编号</label>
+                  </div>
+                  <div>
+                    <input type="text" readonly class="form-control-plaintext" id="ptdeid"
+                      :value="gcpDataList[activingTabIndex2].examinationData.ptdeid">
+                  </div>
+                </div>
+                <div class="examination_table_row">
+                  <div>
+                    <label for="ptdeid">访视名称</label>
+                  </div>
+                  <div>
+                    <input type="text" readonly class="form-control-plaintext" id="ptdeid"
+                      :value="gcpDataList[activingTabIndex2].examinationData.ptdtTabName">
+                  </div>
+                </div>
+                <div class="examination_table_row">
+                  <div>
+                    <label for="ptdeid">检查日期</label>
+                  </div>
+                  <div>
+                    <input type="text" readonly class="form-control-plaintext" id="ptdt_sqdept"
+                      :value="gcpDataList[activingTabIndex2].examinationData.ptdtCheckDate">
+                  </div>
+                </div>
+                <div class="examination_table_row">
+                  <div>
+                    <label for="ptdt_weight">体重 (kg)</label>
+                  </div>
+                  <div>
+                    <input type="text" readonly class="form-control-plaintext" id="ptdt_weight"
+                      :value="gcpDataList[activingTabIndex2].examinationData.ptdtWeight">
+                  </div>
+                </div>
+                <div class="examination_table_row">
+                  <div>
+                    <label for="ptdt_height">身高 (cm)</label>
+                  </div>
+                  <div>
+                    <input type="text" readonly class="form-control-plaintext" id="ptdt_height"
+                      :value="gcpDataList[activingTabIndex2].examinationData.ptdtHeight">
+                  </div>
+                </div>
+                <div class="examination_table_row">
+                  <div>
+                    <label for="ptdt_dosage_and_unit">净注入核素的活性</label>
+                  </div>
+                  <div>
+                    <input type="text" readonly class="form-control-plaintext" id="ptdt_dosage_and_unit"
+                      :value="gcpDataList[activingTabIndex2].examinationData.ptdtDosage">
+                  </div>
+                </div>
+                <div class="examination_table_row">
+                  <div>
+                    <label for="ptdt_ReportDate2">FDG注射时间</label>
+                  </div>
+                  <div>
+                    <input type="text" readonly class="form-control-plaintext" id="ptdt_ReportDate2"
+                      :value="gcpDataList[activingTabIndex2].examinationData.ptdtInjectionTime">
+                  </div>
+                </div>
+                <div class="examination_table_row">
+                  <div>
+                    <label for="ptdt_imageingTime">PET扫描开始时间</label>
+                  </div>
+                  <div>
+                    <input type="text" readonly class="form-control-plaintext" id="ptdt_imageingTime"
+                      :value="gcpDataList[activingTabIndex2].examinationData.ptdtScanTime">
+                  </div>
+                </div>
+                <div class="examination_table_row">
+                  <div>
+                    <label for="ptdt_bloodglucose">血糖水平 (mmol/L)</label>
+                  </div>
+                  <div>
+                    <input type="text" readonly class="form-control-plaintext" id="ptdt_bloodglucose"
+                      :value="gcpDataList[activingTabIndex2].examinationData.ptdtBloodglucose">
+                  </div>
+                </div>
+                <div class="examination_table_row">
+                  <div>
+                    <label for="ptdt_bloodglucose">空腹时长 （小时）</label>
+                  </div>
+                  <div>
+                    <input type="text" readonly class="form-control-plaintext" id="ptdt_bloodglucose" value="> 6">
+                  </div>
+                </div>
+                <div class="examination_table_row">
+                  <div>
+                    <label for="ptdt_djDoctor">记录人</label>
+                  </div>
+                  <div>
+                    <input type="text" readonly class="form-control-plaintext" id="ptdt_djDoctor"
+                      :value="gcpDataList[activingTabIndex2].examinationData.ptdtDjDoctor">
+                  </div>
+                </div>
+              </div>
+              <div class="col-md gcb_evaluation_table">
+                <!-- 这是填写表 -->
+                <div v-if="gcpDataList[activingTabIndex2].evaluationData">
+                  <div v-if="!gcpDataList[activingTabIndex2].evaluationData.isEditing">
+                    <div>
+                      <div class="row row-cols-sm-auto">
+                        <div class="col-12">
+                          <label for="research_Unit_Code" class="col-form-label">纵隔血池 SUV=</label>
+                        </div>
+                        <div class="col-12 position-start-2" style="width: 10%">
+                          <input type="text" class="form-control-plaintext" readonly
+                            :value="gcpDataList[activingTabIndex2].evaluationData.mediastinumSuv">
+                        </div>
+                        <div class="col-12">
+                          <label for="ptdeid" class="col-form-label">肝脏 SUV=</label>
+                        </div>
+                        <div class="col-12 position-start-2" style="width: 10%">
+                          <input type="text" class="form-control-plaintext"
+                            :value="gcpDataList[activingTabIndex2].evaluationData.liverSuv">
+                        </div>
+                      </div>
+                      <div class="row row-cols-sm-auto">
+                        <div class="col-12" style="width:35%">
+                          <label for="ptdeid" class="col-form-label">中存在 FDG 高摄取疾病的证据</label>
+                        </div>
+                        <div class="col-12">
+                          <div class="col-sm col-form-label">
+                            <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="radio" id="evidence1"
+                                :checked="gcpDataList[activingTabIndex2].evaluationData.evidence == 1"
+                                :disabled="gcpDataList[activingTabIndex2].evaluationData.evidence != 1">
+                              <label class="form-check-label" for="evidence1">Negative</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="radio" id="evidence2"
+                                :checked="gcpDataList[activingTabIndex2].evaluationData.evidence == 2"
+                                :disabled="gcpDataList[activingTabIndex2].evaluationData.evidence != 2">
+                              <label class="form-check-label" for="evidence2">Positive</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="radio" id="evidence3"
+                                :checked="gcpDataList[activingTabIndex2].evaluationData.evidence == 3"
+                                :disabled="gcpDataList[activingTabIndex2].evaluationData.evidence != 3">
+                              <label class="form-check-label" for="evidence3">Unknow</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="radio" id="evidence4"
+                                :checked="gcpDataList[activingTabIndex2].evaluationData.evidence == 3"
+                                :disabled="gcpDataList[activingTabIndex2].evaluationData.evidence != 3">
+                              <label class="form-check-label" for="evidence4">NE</label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row row-cols-sm-auto">
+                        <div class="col-12" style="width:35%">
+                          <label for="ptdeid" class="col-form-label">代谢活性最强的病灶 （淋巴结和结外病灶）</label>
+                        </div>
+                        <div class="col-12">
+                          <div class="row row-cols-sm-auto">
+                            <div class="col-12">
+                              <label for="ptdeid" class="col-form-label">具体位置：</label>
+                            </div>
+                            <div class="col-12 position-start-2" style="width: 48%">
+                              <input type="text" class="end-0 form-control-plaintext"
+                                v-model="gcpDataList[activingTabIndex2].evaluationData.lesionLocation">
+                            </div>
+                            <div class="col-12">
+                              <label for="ptdeid" class="col-form-label">SUV=</label>
+                            </div>
+                            <div class="col-12 position-start-2" style="width: 15%">
+                              <input type="text" class="form-control-plaintext"
+                                v-model="gcpDataList[activingTabIndex2].evaluationData.lesionSuv">
+                            </div>
+                          </div>
+                          <div class="row row-cols-sm-auto">
+                            <div class="col-12">
+                              <label for="ptdeid" class="col-form-label">Lugano 5分量表（数字从1-5分）</label>
+                            </div>
+                            <div class="col-12 col-form-label position-start-2">
+                              <select class="form-select form-select-sm position-start-4 position-top-8"
+                                aria-label=".form-select-sm example"
+                                :value="gcpDataList[activingTabIndex2].evaluationData.iugano5ps" disabled>
+                                <option selected value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                              </select>
+                            </div>
+                          </div>
+                          <div class="row row-cols-sm-auto"
+                            v-if="gcpDataList[activingTabIndex2].evaluationData.iugano5ps>3">
+                            <div class="col-12">
+                              <div class="col-sm">
+                                <div class="col-sm col-form-label">
+                                  <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio"
+                                      :checked="gcpDataList[activingTabIndex2].evaluationData.lesionCompare == 1"
+                                      :disabled="gcpDataList[activingTabIndex2].evaluationData.lesionCompare != 1">
+                                    <label class="form-check-label" for="lesionCompare1">与基线相比摄取减少</label>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row row-cols-sm-auto"
+                            v-if="gcpDataList[activingTabIndex2].evaluationData.iugano5ps>3">
+                            <div class="col-12">
+                              <div class="col-sm">
+                                <div class="col-sm col-form-label">
+                                  <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" id="lesionCompare2"
+                                      :checked="gcpDataList[activingTabIndex2].evaluationData.lesionCompare == 2"
+                                      :disabled="gcpDataList[activingTabIndex2].evaluationData.lesionCompare != 2">
+                                    <label class="form-check-label" for="lesionCompare2">与基线相比摄取无显著变化</label>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row row-cols-sm-auto"
+                            v-if="gcpDataList[activingTabIndex2].evaluationData.iugano5ps>3">
+                            <div class="col-12">
+                              <div class="col-sm">
+                                <div class="col-sm col-form-label">
+                                  <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" id="lesionCompare3"
+                                      :checked="gcpDataList[activingTabIndex2].evaluationData.lesionCompare == 3"
+                                      :disabled="gcpDataList[activingTabIndex2].evaluationData.lesionCompare != 3">
+                                    <label class="form-check-label" for="lesionCompare3">摄取量较目视测定的最低值增加</label>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row row-cols-sm-auto">
+                        <div class="col-12" style="width:35%">
+                          <label for="ptdeid" class="col-form-label">新的FDG显影病灶</label>
+                        </div>
+                        <div class="col-12">
+                          <div class="col-sm col-form-label">
+                            <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="radio" id="isNewLesion1"
+                                :checked="gcpDataList[activingTabIndex2].evaluationData.isNewLesion == 0"
+                                :disabled="gcpDataList[activingTabIndex2].evaluationData.isNewLesion != 0">
+                              <label class="form-check-label" for="isNewLesion1">Yes</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="radio" id="isNewLesion2"
+                                :checked="gcpDataList[activingTabIndex2].evaluationData.isNewLesion == 1"
+                                :disabled="gcpDataList[activingTabIndex2].evaluationData.isNewLesion != 1">
+                              <label class="form-check-label" for="isNewLesion2">No</label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row row-cols-sm-auto">
+                        <div class="col-12" style="width:35%">
+                          <label for="ptdeid" class="col-form-label">FDG-avid 病灶是否与淋巴瘤一致，而不是其他原因，如感染或炎症？</label>
+                        </div>
+                        <div class="col-12">
+                          <div class="col-sm col-form-label">
+                            <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="radio" id="isLesionConsistent1"
+                                :checked="gcpDataList[activingTabIndex2].evaluationData.isLesionConsistent == 0"
+                                :disabled="gcpDataList[activingTabIndex2].evaluationData.isLesionConsistent != 0">
+                              <label class="form-check-label" for="isLesionConsistent1">Yes</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="radio" id="isLesionConsistent2"
+                                :checked="gcpDataList[activingTabIndex2].evaluationData.isLesionConsistent == 1"
+                                :disabled="gcpDataList[activingTabIndex2].evaluationData.isLesionConsistent != 1">
+                              <label class="form-check-label" for="isLesionConsistent2">No</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="radio" id="isLesionConsistent3"
+                                :checked="gcpDataList[activingTabIndex2].evaluationData.isLesionConsistent == 2"
+                                :disabled="gcpDataList[activingTabIndex2].evaluationData.isLesionConsistent != 2">
+                              <label class="form-check-label" for="isLesionConsistent3">NA</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="radio" id="isLesionConsistent4"
+                                :checked="gcpDataList[activingTabIndex2].evaluationData.isLesionConsistent == 3"
+                                :disabled="gcpDataList[activingTabIndex2].evaluationData.isLesionConsistent != 3">
+                              <label class="form-check-label" for="isLesionConsistent4">UNknow</label>
+                            </div>
+                            <div style="display: inline-block;"
+                              v-if="gcpDataList[activingTabIndex2].evaluationData.isLesionConsistent==3">
+                              <div style="display: flex; gap: 20px;">
+                                <div>
+                                  Comment:
+                                </div>
+                                <input type="text" class="form-control-custom">
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row row-cols-sm-auto">
+                      <div class="col-12" style="width:35%">
+                        <label for="ptdeid" class="col-form-label">缓解基于PET-CT扫描（采用Lugano 2014标准）</label>
+                      </div>
+                      <div class="col-12">
+                        <div class="col-sm col-form-label">
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="basedPetScan1"
+                              :checked="gcpDataList[activingTabIndex2].evaluationData.basedPetScan == 1"
+                              :disabled="gcpDataList[activingTabIndex2].evaluationData.basedPetScan != 1">
+                            <label class="form-check-label" for="basedPetScan1">CMR</label>
+                          </div>
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="basedPetScan2"
+                              :checked="gcpDataList[activingTabIndex2].evaluationData.basedPetScan == 2"
+                              :disabled="gcpDataList[activingTabIndex2].evaluationData.basedPetScan != 2">
+                            <label class="form-check-label" for="basedPetScan2">PMR</label>
+                          </div>
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="basedPetScan3"
+                              :checked="gcpDataList[activingTabIndex2].evaluationData.basedPetScan == 3"
+                              :disabled="gcpDataList[activingTabIndex2].evaluationData.basedPetScan != 3">
+                            <label class="form-check-label" for="basedPetScan3">SMD</label>
+                          </div>
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="basedPetScan4"
+                              :checked="gcpDataList[activingTabIndex2].evaluationData.basedPetScan == 4"
+                              :disabled="gcpDataList[activingTabIndex2].evaluationData.basedPetScan != 4">
+                            <label class="form-check-label" for="basedPetScan4">PMD</label>
+                          </div>
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="basedPetScan5"
+                              :checked="gcpDataList[activingTabIndex2].evaluationData.basedPetScan == 5"
+                              :disabled="gcpDataList[activingTabIndex2].evaluationData.basedPetScan != 5">
+                            <label class="form-check-label" for="basedPetScan5">NE</label>
+                          </div>
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="basedPetScan6"
+                              :checked="gcpDataList[activingTabIndex2].evaluationData.basedPetScan == 6"
+                              :disabled="gcpDataList[activingTabIndex2].evaluationData.basedPetScan != 6">
+                            <label class="form-check-label" for="basedPetScan6">ND</label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row row-cols-sm-auto">
+                      <div class="col-12" style="width:35%">
+                        <label for="ptdeid" class="col-form-label">根据LYRIC标准进行评估</label>
+                      </div>
+                      <div class="col-12">
+                        <div class="col-sm col-form-label">
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="assYirc1"
+                              :checked="gcpDataList[activingTabIndex2].evaluationData.assYirc == 1"
+                              :disabled="gcpDataList[activingTabIndex2].evaluationData.assYirc != 1">
+                            <label class="form-check-label" for="assYirc1">IR1</label>
+                          </div>
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="assYirc2"
+                              :checked="gcpDataList[activingTabIndex2].evaluationData.assYirc == 2"
+                              :disabled="gcpDataList[activingTabIndex2].evaluationData.assYirc != 2">
+                            <label class="form-check-label" for="assYirc2">IR2</label>
+                          </div>
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="assYirc3"
+                              :checked="gcpDataList[activingTabIndex2].evaluationData.assYirc == 3"
+                              :disabled="gcpDataList[activingTabIndex2].evaluationData.assYirc != 3">
+                            <label class="form-check-label" for="assYirc3">IR1 and IR3</label>
+                          </div>
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="assYirc4"
+                              :checked="gcpDataList[activingTabIndex2].evaluationData.assYirc == 4"
+                              :disabled="gcpDataList[activingTabIndex2].evaluationData.assYirc != 4">
+                            <label class="form-check-label" for="assYirc4">IR2 and IR3</label>
+                          </div>
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="assYirc5"
+                              :checked="gcpDataList[activingTabIndex2].evaluationData.assYirc == 5"
+                              :disabled="gcpDataList[activingTabIndex2].evaluationData.assYirc != 5">
+                            <label class="form-check-label" for="assYirc5">IR3</label>
+                          </div>
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="assYirc6"
+                              :checked="gcpDataList[activingTabIndex2].evaluationData.assYirc == 6"
+                              :disabled="gcpDataList[activingTabIndex2].evaluationData.assYirc != 6">
+                            <label class="form-check-label" for="assYirc6">PD</label>
+                          </div>
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="assYirc7"
+                              :checked="gcpDataList[activingTabIndex2].evaluationData.assYirc == 7"
+                              :disabled="gcpDataList[activingTabIndex2].evaluationData.assYirc != 7">
+                            <label class="form-check-label" for="assYirc7">NE</label>
+                          </div>
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="assYirc8"
+                              :checked="gcpDataList[activingTabIndex2].evaluationData.assYirc == 8"
+                              :disabled="gcpDataList[activingTabIndex2].evaluationData.assYirc != 8">
+                            <label class="form-check-label" for="assYirc8">NA</label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row row-cols-sm-auto">
+                      <div class="col-12" style="width:35%">
+                        <label for="ptdeid" class="col-form-label">总体疗效评估</label>
+                      </div>
+                      <div class="col-12">
+                        <div class="col-sm col-form-label">
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="assOverallResponse1"
+                              :checked="gcpDataList[activingTabIndex2].evaluationData.assOverallResponse == 1"
+                              :disabled="gcpDataList[activingTabIndex2].evaluationData.assOverallResponse != 1">
+                            <label class="form-check-label" for="assOverallResponse1">CR</label>
+                          </div>
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="assOverallResponse2"
+                              :checked="gcpDataList[activingTabIndex2].evaluationData.assOverallResponse == 2"
+                              :disabled="gcpDataList[activingTabIndex2].evaluationData.assOverallResponse != 2">
+                            <label class="form-check-label" for="assOverallResponse2">PR</label>
+                          </div>
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="assOverallResponse3"
+                              :checked="gcpDataList[activingTabIndex2].evaluationData.assOverallResponse == 3"
+                              :disabled="gcpDataList[activingTabIndex2].evaluationData.assOverallResponse != 3">
+                            <label class="form-check-label" for="assOverallResponse3">SD</label>
+                          </div>
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="assOverallResponse4"
+                              :checked="gcpDataList[activingTabIndex2].evaluationData.assOverallResponse == 4"
+                              :disabled="gcpDataList[activingTabIndex2].evaluationData.assOverallResponse != 4">
+                            <label class="form-check-label" for="assOverallResponse4">PD</label>
+                          </div>
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="assOverallResponse5"
+                              :checked="gcpDataList[activingTabIndex2].evaluationData.assOverallResponse == 5"
+                              :disabled="gcpDataList[activingTabIndex2].evaluationData.assOverallResponse != 5">
+                            <label class="form-check-label" for="assOverallResponse5">NE</label>
+                          </div>
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="assOverallResponse6"
+                              :checked="gcpDataList[activingTabIndex2].evaluationData.assOverallResponse == 6"
+                              :disabled="gcpDataList[activingTabIndex2].evaluationData.assOverallResponse != 6">
+                            <label class="form-check-label" for="assOverallResponse6">ND</label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div v-else>
+                    <div>
+                      <div class="row row-cols-sm-auto">
+                        <div class="col-12">
+                          <label for="research_Unit_Code" class="col-form-label">纵隔血池 SUV=</label>
+                        </div>
+                        <div class="col-12 position-start-2" style="width: 10%">
+                          <input type="text" class="form-control wl"
+                            v-model="gcpDataList[activingTabIndex2].evaluationData.mediastinumSuv">
+                        </div>
+                        <div class="col-12">
+                          <label for="ptdeid" class="col-form-label">肝脏 SUV=</label>
+                        </div>
+                        <div class="col-12 position-start-2" style="width: 10%">
+                          <input type="text" class="form-control wl"
+                            v-model="gcpDataList[activingTabIndex2].evaluationData.liverSuv">
+                        </div>
+                      </div>
+                      <div class="row row-cols-sm-auto">
+                        <div class="col-12" style="width:35%">
+                          <label for="ptdeid" class="col-form-label">中存在 FDG 高摄取疾病的证据</label>
+                        </div>
+                        <div class="col-12">
+                          <div class="col-sm col-form-label">
+                            <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="radio" id="evidence1" value="1"
+                                v-model="gcpDataList[activingTabIndex2].evaluationData.evidence">
+                              <label class="form-check-label" for="evidence1">Negative</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="radio" id="evidence2" value="2"
+                                v-model="gcpDataList[activingTabIndex2].evaluationData.evidence">
+                              <label class="form-check-label" for="evidence2">Positive</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="radio" id="evidence3" value="3"
+                                v-model="gcpDataList[activingTabIndex2].evaluationData.evidence">
+                              <label class="form-check-label" for="evidence3">Unknow</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="radio" id="evidence4" value="4"
+                                v-model="gcpDataList[activingTabIndex2].evaluationData.evidence">
+                              <label class="form-check-label" for="evidence4">NE</label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row row-cols-sm-auto">
+                        <div class="col-12" style="width:35%">
+                          <label for="ptdeid" class="col-form-label">代谢活性最强的病灶 （淋巴结和结外病灶）</label>
+                        </div>
+                        <div class="col-12">
+                          <div class="row row-cols-sm-auto">
+                            <div class="col-12">
+                              <label for="ptdeid" class="col-form-label">具体位置：</label>
+                            </div>
+                            <div class="col-12 position-start-2" style="width: 48%">
+                              <input type="text" class="end-0 form-control wl"
+                                v-model="gcpDataList[activingTabIndex2].evaluationData.lesionLocation">
+                            </div>
+                            <div class="col-12">
+                              <label for="ptdeid" class="col-form-label">SUV=</label>
+                            </div>
+                            <div class="col-12 position-start-2" style="width: 15%">
+                              <input type="text" class="form-control wl"
+                                v-model="gcpDataList[activingTabIndex2].evaluationData.lesionSuv">
+                            </div>
+                          </div>
+                          <div class="row row-cols-sm-auto">
+                            <div class="col-12">
+                              <label for="ptdeid" class="col-form-label">Lugano 5分量表（数字从1-5分）</label>
+                            </div>
+                            <div class="col-12 col-form-label position-start-2">
+                              <select class="form-select form-select-sm position-start-4 position-top-8"
+                                aria-label=".form-select-sm example"
+                                v-model="gcpDataList[activingTabIndex2].evaluationData.iugano5ps">
+                                <option selected value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                              </select>
+                            </div>
+                          </div>
+                          <div class="row row-cols-sm-auto"
+                            v-if="gcpDataList[activingTabIndex2].evaluationData.iugano5ps>3">
+                            <div class="col-12">
+                              <div class="col-sm">
+                                <div class="col-sm col-form-label">
+                                  <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" value="1" id="lesionCompare1"
+                                      v-model="gcpDataList[activingTabIndex2].evaluationData.lesionCompare">
+                                    <label class="form-check-label" for="lesionCompare1">与基线相比摄取减少</label>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row row-cols-sm-auto"
+                            v-if="gcpDataList[activingTabIndex2].evaluationData.iugano5ps>3">
+                            <div class="col-12">
+                              <div class="col-sm">
+                                <div class="col-sm col-form-label">
+                                  <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" value="2" id="lesionCompare2"
+                                      v-model="gcpDataList[activingTabIndex2].evaluationData.lesionCompare">
+                                    <label class="form-check-label" for="lesionCompare2">与基线相比摄取无显著变化</label>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row row-cols-sm-auto"
+                            v-if="gcpDataList[activingTabIndex2].evaluationData.iugano5ps>3">
+                            <div class="col-12">
+                              <div class="col-sm">
+                                <div class="col-sm col-form-label">
+                                  <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" value="3" id="lesionCompare3"
+                                      v-model="gcpDataList[activingTabIndex2].evaluationData.lesionCompare">
+                                    <label class="form-check-label" for="lesionCompare3">摄取量较目视测定的最低值增加</label>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row row-cols-sm-auto">
+                        <div class="col-12" style="width:35%">
+                          <label for="ptdeid" class="col-form-label">新的FDG显影病灶</label>
+                        </div>
+                        <div class="col-12">
+                          <div class="col-sm col-form-label">
+                            <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="radio" value="0" id="isNewLesion1"
+                                v-model="gcpDataList[activingTabIndex2].evaluationData.isNewLesion">
+                              <label class="form-check-label" for="isNewLesion1">Yes</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="radio" value="1" id="isNewLesion2"
+                                v-model="gcpDataList[activingTabIndex2].evaluationData.isNewLesion">
+                              <label class="form-check-label" for="isNewLesion2">No</label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row row-cols-sm-auto">
+                        <div class="col-12" style="width:35%">
+                          <label for="ptdeid" class="col-form-label">FDG-avid 病灶是否与淋巴瘤一致，而不是其他原因，如感染或炎症？</label>
+                        </div>
+                        <div class="col-12">
+                          <div class="col-sm col-form-label">
+                            <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="radio" id="isLesionConsistent1" value="0"
+                                v-model="gcpDataList[activingTabIndex2].evaluationData.isLesionConsistent">
+                              <label class="form-check-label" for="isLesionConsistent1">Yes</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="radio" id="isLesionConsistent2" value="1"
+                                v-model="gcpDataList[activingTabIndex2].evaluationData.isLesionConsistent">
+                              <label class="form-check-label" for="isLesionConsistent2">No</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="radio" id="isLesionConsistent3" value="2"
+                                v-model="gcpDataList[activingTabIndex2].evaluationData.isLesionConsistent">
+                              <label class="form-check-label" for="isLesionConsistent3">NA</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="radio" id="isLesionConsistent4" value="3"
+                                v-model="gcpDataList[activingTabIndex2].evaluationData.isLesionConsistent">
+                              <label class="form-check-label" for="isLesionConsistent4">UNknow</label>
+                            </div>
+                            <div style="display: inline-block;"
+                              v-if="gcpDataList[activingTabIndex2].evaluationData.isLesionConsistent==3">
+                              <div style="display: flex; gap: 20px;">
+                                <div>
+                                  Comment:
+                                </div>
+                                <input type="text" class="form-control-custom">
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row row-cols-sm-auto">
+                      <div class="col-12" style="width:35%">
+                        <label for="ptdeid" class="col-form-label">缓解基于PET-CT扫描（采用Lugano 2014标准）</label>
+                      </div>
+                      <div class="col-12">
+                        <div class="col-sm col-form-label">
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="basedPetScan1" value="1"
+                              v-model="gcpDataList[activingTabIndex2].evaluationData.basedPetScan">
+                            <label class="form-check-label" for="basedPetScan1">CMR</label>
+                          </div>
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="basedPetScan2" value="2"
+                              v-model="gcpDataList[activingTabIndex2].evaluationData.basedPetScan">
+                            <label class="form-check-label" for="basedPetScan2">PMR</label>
+                          </div>
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="basedPetScan3" value="3"
+                              v-model="gcpDataList[activingTabIndex2].evaluationData.basedPetScan">
+                            <label class="form-check-label" for="basedPetScan3">SMD</label>
+                          </div>
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="basedPetScan4" value="4"
+                              v-model="gcpDataList[activingTabIndex2].evaluationData.basedPetScan">
+                            <label class="form-check-label" for="basedPetScan4">PMD</label>
+                          </div>
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="basedPetScan5" value="5"
+                              v-model="gcpDataList[activingTabIndex2].evaluationData.basedPetScan">
+                            <label class="form-check-label" for="basedPetScan5">NE</label>
+                          </div>
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="basedPetScan6" value="6"
+                              v-model="gcpDataList[activingTabIndex2].evaluationData.basedPetScan">
+                            <label class="form-check-label" for="basedPetScan6">ND</label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row row-cols-sm-auto">
+                      <div class="col-12" style="width:35%">
+                        <label for="ptdeid" class="col-form-label">根据LYRIC标准进行评估</label>
+                      </div>
+                      <div class="col-12">
+                        <div class="col-sm col-form-label">
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="assYirc1" value="1"
+                              v-model="gcpDataList[activingTabIndex2].evaluationData.assYirc">
+                            <label class="form-check-label" for="assYirc1">IR1</label>
+                          </div>
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="assYirc2" value="2"
+                              v-model="gcpDataList[activingTabIndex2].evaluationData.assYirc">
+                            <label class="form-check-label" for="assYirc2">IR2</label>
+                          </div>
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="assYirc3" value="3"
+                              v-model="gcpDataList[activingTabIndex2].evaluationData.assYirc">
+                            <label class="form-check-label" for="assYirc3">IR1 and IR3</label>
+                          </div>
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="assYirc4" value="4"
+                              v-model="gcpDataList[activingTabIndex2].evaluationData.assYirc">
+                            <label class="form-check-label" for="assYirc4">IR2 and IR3</label>
+                          </div>
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="assYirc5" value="5"
+                              v-model="gcpDataList[activingTabIndex2].evaluationData.assYirc">
+                            <label class="form-check-label" for="assYirc5">IR3</label>
+                          </div>
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="assYirc6" value="6"
+                              v-model="gcpDataList[activingTabIndex2].evaluationData.assYirc">
+                            <label class="form-check-label" for="assYirc6">PD</label>
+                          </div>
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="assYirc7" value="7"
+                              v-model="gcpDataList[activingTabIndex2].evaluationData.assYirc">
+                            <label class="form-check-label" for="assYirc7">NE</label>
+                          </div>
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="assYirc8" value="8"
+                              v-model="gcpDataList[activingTabIndex2].evaluationData.assYirc">
+                            <label class="form-check-label" for="assYirc8">NA</label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row row-cols-sm-auto">
+                      <div class="col-12" style="width:35%">
+                        <label for="ptdeid" class="col-form-label">总体疗效评估</label>
+                      </div>
+                      <div class="col-12">
+                        <div class="col-sm col-form-label">
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="assOverallResponse1" value="1"
+                              v-model="gcpDataList[activingTabIndex2].evaluationData.assOverallResponse">
+                            <label class="form-check-label" for="assOverallResponse1">CR</label>
+                          </div>
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="assOverallResponse2" value="2"
+                              v-model="gcpDataList[activingTabIndex2].evaluationData.assOverallResponse">
+                            <label class="form-check-label" for="assOverallResponse2">PR</label>
+                          </div>
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="assOverallResponse3" value="3"
+                              v-model="gcpDataList[activingTabIndex2].evaluationData.assOverallResponse">
+                            <label class="form-check-label" for="assOverallResponse3">SD</label>
+                          </div>
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="assOverallResponse4" value="4"
+                              v-model="gcpDataList[activingTabIndex2].evaluationData.assOverallResponse">
+                            <label class="form-check-label" for="assOverallResponse4">PD</label>
+                          </div>
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="assOverallResponse5" value="5"
+                              v-model="gcpDataList[activingTabIndex2].evaluationData.assOverallResponse">
+                            <label class="form-check-label" for="assOverallResponse5">NE</label>
+                          </div>
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="assOverallResponse6" value="6"
+                              v-model="gcpDataList[activingTabIndex2].evaluationData.assOverallResponse">
+                            <label class="form-check-label" for="assOverallResponse6">ND</label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="evaluation_commit_row">
+                      <button class="evaluation_commit_button">
+                        创建评估
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div class="empty_gcb_evaluation" v-else>
+                  <div class="create_page_container">
+                    <div>
+                      当前检查尚未进行评估
+                    </div>
+                    <div>
+                      <button class="do_evaluation_button" v-on:click="createEvaluation2">
+                        进行评估
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </form>

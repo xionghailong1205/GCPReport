@@ -88,8 +88,120 @@ const mockData = {
   ],
 };
 
+// 需要构造的数据
+const test = [
+  {
+    examinationData: {
+      researchUnitCode: undefined,
+      ptdtTabName: "SCREENING",
+      ptdeid: 2,
+      ptdtCheckDate: "2023-04-11",
+      ptdtWeight: 55,
+      ptdtHeight: 173,
+      ptdtDosage: "85 MBq",
+      ptdtInjectionTime: "18:24",
+      ptdtScanTime: "22:16",
+      ptdtBloodglucose: "4.5",
+      ptdtDjDoctor: "注射护士",
+    },
+    evaluationData: {
+      isEditing: false,
+      mediastinumSuv: 10.1,
+      liverSuv: 10.2,
+      evidence: 2,
+      lesionLocation: "简单的位置",
+      lesionSuv: 10.3,
+      // 这里有一个简单的交互
+      iugano5ps: 4,
+      lesionCompare: 2,
+      isNewLesion: 0,
+      isLesionConsistent: 0,
+      // 这里有一个简单的交互
+      comment: "placeHolder",
+      basedPetScan: 4,
+      assYirc: 2,
+      assOverallResponse: 4,
+    },
+  },
+  {
+    examinationData: {
+      researchUnitCode: undefined,
+      ptdtTabName: "WEEK 1",
+      ptdeid: 1,
+      ptdtCheckDate: "2023-04-11",
+      ptdtWeight: 55,
+      ptdtHeight: 173,
+      ptdtDosage: "85 MBq",
+      ptdtInjectionTime: "18:24",
+      ptdtScanTime: "22:16",
+      ptdtBloodglucose: "4.5",
+      ptdtDjDoctor: "注射护士",
+    },
+    evaluationData: undefined,
+  },
+  {
+    examinationData: {
+      researchUnitCode: undefined,
+      ptdtTabName: "WEEK 2",
+      ptdeid: 1,
+      ptdtCheckDate: "2023-04-11",
+      ptdtWeight: 55,
+      ptdtHeight: 173,
+      ptdtDosage: "85 MBq",
+      ptdtInjectionTime: "18:24",
+      ptdtScanTime: "22:16",
+      ptdtBloodglucose: "4.5",
+      ptdtDjDoctor: "注射护士",
+    },
+    evaluationData: {
+      isEditing: false,
+      mediastinumSuv: 10.1,
+      liverSuv: 10.2,
+      evidence: 1,
+      lesionLocation: "week 2",
+      lesionSuv: 10.3,
+      // 这里有一个简单的交互
+      iugano5ps: 3,
+      lesionCompare: 6,
+      isNewLesion: 0,
+      isLesionConsistent: 0,
+      // 这里有一个简单的交互
+      comment: "placeHolder",
+      basedPetScan: 4,
+      assYirc: 2,
+      assOverallResponse: 2,
+    },
+  },
+];
+
+const constructHHMMTime = (string) => {
+  function extractNumberFromDateString(dateString) {
+    const regex = /\d+/;
+    const match = dateString.match(regex);
+
+    return match ? parseInt(match[0]) : null;
+  }
+
+  function formatTimeHHmm(date) {
+    // 获取小时，使用两位数表示，不足两位补0
+    const hours = date.getHours().toString().padStart(2, "0");
+
+    // 获取分钟，使用两位数表示，不足两位补0
+    const minutes = date.getMinutes().toString().padStart(2, "0");
+
+    // 将小时和分钟拼接成 HHmm 格式的字符串
+    return `${hours}:${minutes}`;
+  }
+
+  const extractedNumber = extractNumberFromDateString(string);
+
+  const result = formatTimeHHmm(new Date(extractedNumber));
+
+  return result;
+};
+
 const emptyEvaluationTableData = {
-  isEditing: false,
+  isEditing: true,
   mediastinumSuv: "",
   liverSuv: "",
   evidence: 0,
@@ -105,6 +217,14 @@ const emptyEvaluationTableData = {
   basedPetScan: 0,
   assYirc: 0,
   assOverallResponse: 0,
+};
+
+const getPtdtTabName = (index) => {
+  if (index === 0) {
+    return "SCREENING";
+  } else {
+    return `WEEK ${index}`;
+  }
 };
 
 // 之后可以导入 module 目前还不需要
@@ -165,13 +285,80 @@ var app = new Vue({
   el: "#app",
   data: {
     activingTabIndex: 0,
+    activingTabIndex2: 0,
     count: "你好",
     gcpDataList: [],
   },
   created: async function () {
     const netWorkService = new NetWorkService(1);
     const result = await netWorkService.fetchData();
-    console.log(result);
+
+    const ptdetailList = result.ptdetailList;
+    const iymphomaList = result.iymphomaList;
+
+    // 我们在这里进行构造
+    const initData = ptdetailList.map((ptDetail, index) => {
+      const relatedIymphoma = iymphomaList.find((iymphoma) => {
+        return ptDetail.ptdeid === iymphoma.fk_tab_ptdetail;
+      });
+
+      if (relatedIymphoma) {
+        return {
+          examinationData: {
+            researchUnitCode: relatedIymphoma.research_unit_code,
+            ptdtTabName: getPtdtTabName(index),
+            ptdeid: ptDetail.ptdeid,
+            ptdtCheckDate: ptDetail.ptdt_checkDate,
+            ptdtWeight: ptDetail.ptdt_weight,
+            ptdtHeight: ptDetail.ptdt_height,
+            ptdtDosage: `${ptDetail.ptdt_dosage} ${ptDetail.ptdt_dosageunit}`,
+            ptdtInjectionTime: constructHHMMTime(ptDetail.ptdt_ReportDate2),
+            ptdtScanTime: constructHHMMTime(ptDetail.ptdt_ReportDate2),
+            ptdtBloodglucose: ptDetail.ptdt_bloodglucose,
+            ptdtDjDoctor: ptDetail.ptdt_djDoctor,
+          },
+          evaluationData: {
+            isEditing: false,
+            mediastinumSuv: relatedIymphoma.mediastinum_suv,
+            liverSuv: relatedIymphoma.liver_suv,
+            evidence: relatedIymphoma.evidence,
+            lesionLocation: relatedIymphoma.lesion_location,
+            lesionSuv: relatedIymphoma.lesion_suv,
+            // 这里有一个简单的交互
+            iugano5ps: relatedIymphoma.iugano_5ps,
+            lesionCompare: relatedIymphoma.lesion_compare,
+            isNewLesion: relatedIymphoma.is_new_lesion,
+            isLesionConsistent: relatedIymphoma.is_lesion_consistent,
+            // 这里有一个简单的交互
+            comment: relatedIymphoma.comment,
+            basedPetScan: relatedIymphoma.based_pet_scan,
+            assYirc: relatedIymphoma.ass_yirc,
+            assOverallResponse: relatedIymphoma.ass_overall_response,
+          },
+        };
+      } else {
+        return {
+          examinationData: {
+            researchUnitCode: undefined,
+            ptdtTabName: getPtdtTabName(index),
+            ptdeid: ptDetail.ptdeid,
+            ptdtCheckDate: ptDetail.ptdt_checkDate,
+            ptdtWeight: ptDetail.ptdt_weight,
+            ptdtHeight: ptDetail.ptdt_height,
+            ptdtDosage: `${ptDetail.ptdt_dosage} ${ptDetail.ptdt_dosageunit}`,
+            ptdtInjectionTime: constructHHMMTime(ptDetail.ptdt_ReportDate2),
+            ptdtScanTime: constructHHMMTime(ptDetail.ptdt_ReportDate2),
+            ptdtBloodglucose: ptDetail.ptdt_bloodglucose,
+            ptdtDjDoctor: ptDetail.ptdt_djDoctor,
+          },
+          evaluationData: undefined,
+        };
+      }
+    });
+
+    console.log(initData);
+
+    this.gcpDataList = initData;
   },
   computed: {
     tagList: function () {
@@ -181,6 +368,7 @@ var app = new Vue({
 
         return {
           ptdtTabName: gcpData.examinationData.ptdtTabName,
+          hasEvaluated,
         };
       });
     },
@@ -189,10 +377,15 @@ var app = new Vue({
     changeTabs: function (indexOfClickedTab) {
       this.activingTabIndex = indexOfClickedTab;
     },
-    doSomething: function () {
-      // alert(this.activingTabIndex);
-
+    changeTabs2: function (indexOfClickedTab) {
+      this.activingTabIndex2 = indexOfClickedTab;
+    },
+    createEvaluation: function () {
       this.gcpDataList[this.activingTabIndex].evaluationData =
+        emptyEvaluationTableData;
+    },
+    createEvaluation2: function () {
+      this.gcpDataList[this.activingTabIndex2].evaluationData =
         emptyEvaluationTableData;
     },
   },

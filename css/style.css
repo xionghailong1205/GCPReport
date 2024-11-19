@@ -196,10 +196,7 @@ input:focus {
 }
 
 .do_evaluation_button {
-  /* position: absolute; */
   font-size: 14px;
-  /* bottom: 10px; */
-  /* right: 20px; */
   border: none;
   padding: 5px 13px;
   background-color: #31a4ebe3;
@@ -217,4 +214,25 @@ input:focus {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.comment_container {
+  border: 1px solid yellow;
+}
+
+.evaluation_commit_row {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.evaluation_commit_button {
+  border: none;
+  padding: 3px 7px;
+  background-color: #31a4ebe3;
+  color: white;
+  border-radius: 5px;
+}
+
+.evaluation_commit_button:hover {
+  background-color: #2296de;
 }
